@@ -318,3 +318,11 @@ BOOL CMainFrame::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
 	TRACE(TEXT("CMainFrame::OnCopyData()\n"));
 	return CFrameWndEx::OnCopyData(pWnd, pCopyDataStruct);
 }
+
+
+//LRESULT CMainFrame::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+//{
+	// TODO: ここに特定なコードを追加するか、もしくは基底クラスを呼び出してください。
+
+//	return CFrameWndEx::DefWindowProc(message, wParam, lParam);
+//}

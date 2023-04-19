@@ -162,10 +162,17 @@ void CMFCAppWmCopydataTestView::OnBnClickedBtnSend()
 	CWnd* pWndCopyData = FindWindow(0, stFindWindow);
 
 	if (pWndCopyData) {
-		wchar_t* pBuf = new wchar_t[128];
-		wcscpy_s(pBuf, 128, stSend);
-		pWndCopyData->SendMessage(WM_COPYDATA, (WPARAM)this->GetSafeHwnd(), (LPARAM)1);
-		delete[] pBuf;
+
+		COPYDATASTRUCT *pCst = new COPYDATASTRUCT;
+		pCst->dwData = 1;
+		pCst->cbData = sizeof(wchar_t) * 128;
+		pCst->lpData = (PVOID)new wchar_t[128];
+		wcscpy_s((wchar_t *)pCst->lpData, 128, stSend);
+
+		pWndCopyData->SendMessage(WM_COPYDATA, (WPARAM)this->GetSafeHwnd(), (LPARAM)pCst);
+//		pWndCopyData->SendMessage(WM_CLOSE, (WPARAM)this->GetSafeHwnd(), (LPARAM)1);
+		delete[] pCst->lpData;
+		delete pCst;
 	}
 
 
@@ -174,10 +181,16 @@ void CMFCAppWmCopydataTestView::OnBnClickedBtnSend()
 #if 1
 		CWnd *pWndEx = FindWindowEx(pWndCopyData->m_hWnd, NULL, TEXT("#32770"), NULL);
 		if (pWndEx) {
-			wchar_t* pBuf = new wchar_t[128];
-			wcscpy_s(pBuf,128,stSend);
-			pWndEx->SendMessage(WM_COPYDATA, (WPARAM)this->GetSafeHwnd(), (LPARAM)1);
-			delete[] pBuf;
+			COPYDATASTRUCT* pCst = new COPYDATASTRUCT;
+			pCst->dwData = 1;
+			pCst->cbData = sizeof(wchar_t) * 128;
+			pCst->lpData = (PVOID)new wchar_t[128];
+			wcscpy_s((wchar_t*)pCst->lpData, 128, stSend);
+
+			pWndEx->SendMessage(WM_COPYDATA, (WPARAM)this->GetSafeHwnd(), (LPARAM)pCst);
+	//		pWndCopyData->SendMessage(WM_CLOSE, (WPARAM)this->GetSafeHwnd(), (LPARAM)1);
+			delete[] pCst->lpData;
+			delete pCst;
 		}
 #else 
 		HWND hWnd = ::FindWindowEx(pWndCopyData->m_hWnd, NULL, TEXT("#32770"), NULL);
@@ -197,5 +210,8 @@ BOOL CMFCAppWmCopydataTestView::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyData
 {
 	// TODO: ここにメッセージ ハンドラー コードを追加するか、既定の処理を呼び出します。
 	TRACE(TEXT("CMFCAppWmCopydataTestView::OnCopyData()\n"));
+	CWnd* pWndRcv = GetDlgItem(IDC_EDT_RECV);
+
+	pWndRcv->SetWindowTextW((wchar_t*)pCopyDataStruct->lpData);
 	return CFormView::OnCopyData(pWnd, pCopyDataStruct);
 }

@@ -47,6 +47,7 @@ protected:
 
 public:
 	afx_msg BOOL OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct);
+//	virtual LRESULT DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 };
 
 
