@@ -160,14 +160,34 @@ void CMFCAppWmCopydataTestView::OnBnClickedBtnSend()
 	stFindWindow = stTitleSend;
 	stFindWindow += TEXT(" - MFCAppWmCopydataTest");
 	CWnd* pWndCopyData = FindWindow(0, stFindWindow);
+
 	if (pWndCopyData) {
+		wchar_t* pBuf = new wchar_t[128];
+		wcscpy_s(pBuf, 128, stSend);
+		pWndCopyData->SendMessage(WM_COPYDATA, (WPARAM)this->GetSafeHwnd(), (LPARAM)1);
+		delete[] pBuf;
+	}
+
+
+
+	if (pWndCopyData) {
+#if 1
 		CWnd *pWndEx = FindWindowEx(pWndCopyData->m_hWnd, NULL, TEXT("#32770"), NULL);
 		if (pWndEx) {
 			wchar_t* pBuf = new wchar_t[128];
 			wcscpy_s(pBuf,128,stSend);
-			pWndEx->SendMessage(WM_COPYDATA, 0, (LPARAM)pBuf);
+			pWndEx->SendMessage(WM_COPYDATA, (WPARAM)this->GetSafeHwnd(), (LPARAM)1);
 			delete[] pBuf;
 		}
+#else 
+		HWND hWnd = ::FindWindowEx(pWndCopyData->m_hWnd, NULL, TEXT("#32770"), NULL);
+		if (hWnd) {
+			wchar_t* pBuf = new wchar_t[128];
+			wcscpy_s(pBuf,128,stSend);
+			::SendMessage(hWnd,WM_COPYDATA, (WPARAM)this->GetSafeHwnd(), (LPARAM)pBuf);
+			delete[] pBuf;
+		}
+#endif
 	}
 
 }
